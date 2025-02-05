@@ -1,0 +1,49 @@
+PODS:
+  - byteark_player_flutter (0.0.1):
+    - ByteArkPlayerSDK (~> 0.3.1)
+    - ByteArkPlayerSDKAdsPlugin (~> 0.1.3)
+    - ByteArkPlayerSDKLighthousePlugin (~> 0.1.5)
+    - Flutter
+  - ByteArkPlayerSDK (0.3.1)
+  - ByteArkPlayerSDKAdsPlugin (0.1.3):
+    - ByteArkPlayerSDK (~> 0.3.1)
+    - GoogleAds-IMA-iOS-SDK (~> 3.23.0)
+  - ByteArkPlayerSDKLighthousePlugin (0.1.5):
+    - ByteArkPlayerSDK (~> 0.3.0)
+    - LighthouseNativeSDK (~> 0.2.14)
+  - Flutter (1.0.0)
+  - GoogleAds-IMA-iOS-SDK (3.23.0)
+  - LighthouseNativeSDK (0.2.14)
+
+DEPENDENCIES:
+  - byteark_player_flutter (from `.symlinks/plugins/byteark_player_flutter/ios`)
+  - Flutter (from `Flutter`)
+
+SPEC REPOS:
+  https://github.com/byteark/byteark-player-sdk-ios-specs.git:
+    - ByteArkPlayerSDK
+    - ByteArkPlayerSDKAdsPlugin
+    - ByteArkPlayerSDKLighthousePlugin
+  https://github.com/byteark/lighthouse-sdk-native-ios-specs.git:
+    - LighthouseNativeSDK
+  https://github.com/CocoaPods/Specs.git:
+    - GoogleAds-IMA-iOS-SDK
+
+EXTERNAL SOURCES:
+  byteark_player_flutter:
+    :path: ".symlinks/plugins/byteark_player_flutter/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  byteark_player_flutter: f36cd2ecc5d9233b66cb8b149dea68355ee4edf0
+  ByteArkPlayerSDK: 07d5d842e190419c016dc22cebf1d5f301cfb673
+  ByteArkPlayerSDKAdsPlugin: ac3cf9dfa4338bd386ef0027520ab57fb5679e7f
+  ByteArkPlayerSDKLighthousePlugin: ec437f56d6c9626137fe96908d3901d1a4222f2a
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  GoogleAds-IMA-iOS-SDK: ee2a68ed7a1a17c7bb81bdb1b81590b35a3fc8f3
+  LighthouseNativeSDK: 7b72c572dc475eb859a47878acb7df732cd79c52
+
+PODFILE CHECKSUM: e3b2b451eeca43e842c9a7148ada6c6a66a3524b
+
+COCOAPODS: 1.16.2
