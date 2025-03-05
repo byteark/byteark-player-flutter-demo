@@ -1,9 +1,17 @@
-# [Flutter] ByteArk Player Plugin Integration Guide
-
 # ByteArk Player Plugin
 
-The **ByteArk Player** plugin is a powerful and flexible video player package designed for seamless integration into Flutter applications. This plugin provides a smooth video playback experience, supports various media formats, and is highly customizable to suit your application's requirements. Whether you're developing a media app, an educational platform, or any project requiring video playback, ByteArk Player makes it simple to get started.\n\n**Disclaimer:** This is the non-commercial version of ByteArk Player. Commercial use and/or business support requires a license. Please contact [sales@byteark.com](mailto:sales@byteark.com) to get more information about our solutions.\n\n ![](attachments/be3989e4-3a87-4cc7-a329-89392ac6deda.png)
+![Pub Version](https://img.shields.io/pub/v/byteark_player_flutter)
 
+The ByteArk Player plugin is a powerful and flexible video player package designed for seamless integration into Flutter applications. This plugin provides a smooth video playback experience, supports various media formats, and is highly customizable to suit your application's requirements. Whether you're developing a media app, an educational platform, or any project requiring video playback, ByteArk Player makes it simple to get started.
+
+**Disclaimer:**
+This is the non-commercial version of ByteArk Player. Commercial use and/or business support requires a license. Please contact sales@byteark.com to get more information about our solutions.
+
+|             | Android | iOS   |
+|-------------|---------|-------|
+| **Support** | SDK 21+ | 14.0+ |
+
+![The screenshot](https://byteark-sdk.st-th-1.byteark.com/assets/images/byteark_player_flutter_screenshot.jpg)
 
 ---
 
@@ -16,39 +24,39 @@ The **ByteArk Player** plugin is a powerful and flexible video player package de
 
 1. Add the dependency
 
+   
+   1. Add the ByteArk Player plugin to your project by running this command in your terminal
 
-1. Add the ByteArk Player plugin to your project by running this command in your terminal
+      ```none
+      $ flutter pub add byteark_player_flutter
+      ```
 
-   ```none
-   $ flutter pub add byteark_player_flutter
-   ```
+   This command automatically updates your `pubspec.yaml`  file to include the ByteArk Player package and runs the `flutter pub get` command.
 
-This command automatically updates your `pubspec.yaml`  file to include the ByteArk Player package and runs the `flutter pub get` command.
-
-\
-**Alternatively**, you can manually add the following line in your `pubspec.yaml` file under `dependencies`
+   \
+   **Alternatively**, you can manually add the following line in your `pubspec.yaml` file under `dependencies`
 
    ```javascript
    dependencies:
      byteark_player: ^1.0.6 // Put the latest version of the plugin.
    ```
 
-If you manually edited your `pubspec.yaml` file, you can run this command to fetch the new dependency
+   If you manually edited your `pubspec.yaml` file, you can run this command to fetch the new dependency
 
    ```javascript
    $ flutter pub get
    ```
 2. Import and use ByteArk Player widget
 
+   
+   1. Now, you can start using the **ByteArk Player** plugin in your Dart code by importing it at the top of your file
 
-1. Now, you can start using the **ByteArk Player** plugin in your Dart code by importing it at the top of your file
-
-   ```javascript
-   import 'package:byteark_player_flutter/presentation/byteark_player.dart';
-   .
-   .
-   ByteArkPlayer(playerConfig: playerConfig)
-   ```
+      ```javascript
+      import 'package:byteark_player_flutter/presentation/byteark_player.dart';
+      .
+      .
+      ByteArkPlayer(playerConfig: playerConfig)
+      ```
 
 
 ---
@@ -61,8 +69,8 @@ To integrate ByteArk Player into your Flutter iOS project using CocoaPods, follo
 1. Cocoapods will install SDK directly from Github private repository using ssh key, if you haven't set an ssh key to your Github account please follow [Adding a new SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) document on Github website.
 2. Open `Podfile`
 
-
-1. Navigate to your iOS project directory and open the `Podfile`, Add the following code into the file.
+   
+   1. Navigate to your iOS project directory and open the `Podfile`, Add the following code into the file.
 
 ```javascript
 // Set platform to iOS 14
@@ -79,20 +87,20 @@ source 'https://github.com/byteark/lighthouse-sdk-native-ios-specs.git'
 
 2. Install the Pods
 
+   
+   1. Open a terminal window and navigate to the `ios` directory of your Flutter project, Run the following command to install the CocoaPods dependencies and update the repository
 
-1. Open a terminal window and navigate to the `ios` directory of your Flutter project, Run the following command to install the CocoaPods dependencies and update the repository
-
-   ```javascript
-   pod install --repo-update
-   ```
+      ```javascript
+      pod install --repo-update
+      ```
 3. Open the Workspace
 
-
-1. After running `pod install --repo-update`, CocoaPods will create an Xcode workspace file (`.xcworkspace`), Open this workspace in Xcode
+   
+   1. After running `pod install --repo-update`, CocoaPods will create an Xcode workspace file (`.xcworkspace`), Open this workspace in Xcode
 4. Build and Run
 
-
-1. After making the above changes, **build and run your project** on an iOS simulator or physical device to verify the integration.
+   
+   1. After making the above changes, **build and run your project** on an iOS simulator or physical device to verify the integration.
 
 
 ---
@@ -104,10 +112,10 @@ To integrate ByteArk Player into your Flutter Android project, follow these step
 
 1. **Modify the AndroidManifest.xml**
 
+   
+   1. Navigate to `android/app/src/main/AndroidManifest.xml` and apply the following changes
 
-1. Navigate to `android/app/src/main/AndroidManifest.xml` and apply the following changes
-
-
+      
       1. **Add required permissions** for network access, foreground services, and boot reception. Add these lines inside the `<manifest>`
 
          ```none
@@ -146,28 +154,28 @@ To integrate ByteArk Player into your Flutter Android project, follow these step
          ```
 2. Navigate to `android/app/src/main/kotlin/com/example/your_project_name/MainActivity.kt` and update the main activity
 
-
-1. **Extend** `FlutterFragmentActivity()` to ensure proper integration
-
-   ```kotlin
-   import io.flutter.embedding.android.FlutterFragmentActivity
    
-   class MainActivity: FlutterFragmentActivity()
-   ```
+   1. **Extend** `FlutterFragmentActivity()` to ensure proper integration
+
+      ```kotlin
+      import io.flutter.embedding.android.FlutterFragmentActivity
+      
+      class MainActivity: FlutterFragmentActivity()
+      ```
 3. Configure Local Properties
 
+   
+   1. In the `android/local.properties` file, set up your GitLab private tokens for `ByteArk Player` and `ByteArk LightHouse`.
+   2. Add the following lines, replacing `[YOUR_PRIVATE_TOKEN]` with the token provided by the ByteArk team
 
-1. In the `android/local.properties` file, set up your GitLab private tokens for `ByteArk Player` and `ByteArk LightHouse`.
-2. Add the following lines, replacing `[YOUR_PRIVATE_TOKEN]` with the token provided by the ByteArk team
-
-   ```javascript
-   gitLabByteArkPlayerPrivateToken=[YOUR_PRIVATE_TOKEN]
-   gitLabByteArkLighthousePrivateToken=[YOUR_PRIVATE_TOKEN]
-   ```
+      ```javascript
+      gitLabByteArkPlayerPrivateToken=[YOUR_PRIVATE_TOKEN]
+      gitLabByteArkLighthousePrivateToken=[YOUR_PRIVATE_TOKEN]
+      ```
 4. Build and Run
 
-
-1. After making the above changes, **build and run your project** on an Android emulator or physical device to verify the integration.
+   
+   1. After making the above changes, **build and run your project** on an Android emulator or physical device to verify the integration.
 
 
 ---
@@ -315,6 +323,9 @@ class ByteArkPlayerConfig {
   final ByteArkChromeCastSetting? chromeCastSetting; // Chromecast settings for streaming.
   final ByteArkAdsInsertionSetting? adsInsertionSetting; // Settings for ad insertion during playback.
   final ByteArkAdsSettings? adsSettings; // General ad settings for the player.
+  final bool? secureSurface; // Determines whether the player should use a secure surface for rendering protected content.
+  final ByteArkPlayerSubtitleSize? subtitleSize; // Set subtitle size.
+  final bool? subtitleBackgroundEnabled; // enable or disable subtitle background.
 }
 ```
 
@@ -342,6 +353,9 @@ class ByteArkPlayerConfig {
 | `chromeCastSetting` | ByteArkChromeCastSetting? | Defines settings for Chrome cast integration and functionality. |
 | `adsInsertionSetting` | ByteArkAdsInsertionSetting? | Specifies settings for ad insertion during media playback. |
 | `adsSettings` | ByteArkAdsSettings? | Contains general ad settings for the player. |
+| `secureSurface` | bool? | Set this to `true`  to prevent screenshot capture or video recording of a video player. |
+| `subtitleSize` | ByteArkPlayerSubtitleSize? | Defines the subtitle size, default to medium. |
+| `subtitleBackgroundEnabled` | bool? | Specifies whether a background should be displayed behind subtitles. |
 
 
 ---
@@ -436,25 +450,75 @@ This section sets up an event listener to handle various events emitted by the B
 | `playerEnterPictureInPictureMode` | Triggered when the player enters Picture-in-Picture mode. |
 | `playerExitPictureInPictureMode` | Triggered when the player exits Picture-in-Picture mode. |
 | `playbackResolutionChanged` | Triggered when the playback resolution changes. |
+| `adsRequest` | An ad request. |
+| `adsBreakStart` | An ad break starts (multiple ads may play in sequence). |
+| `adsBreakEnd` | An ad break ends. |
+| `adsStart` (return ByteArkPlayerAdsData) | An ad starts playing. |
+| `adsImpressed` (return ByteArkPlayerAdsData) | An impression is recorded for the ad. |
+| `adsCompleted` (return ByteArkPlayerAdsData) | An ad finishes playing. |
+| `adsFirstQuartile` (return ByteArkPlayerAdsData) | The first 25% of the ad has been played. |
+| `adsMidPoint` (return ByteArkPlayerAdsData) | 50% of the ad has been played. |
+| `adsThirdQuartile` (return ByteArkPlayerAdsData) | 75% of the ad has been played. |
+| `adsClicked` (return ByteArkPlayerAdsData) | The user clicks on the ad. |
+| `adsSkipped` (return ByteArkPlayerAdsData) | The user skips the ad. |
+| `allAdsCompleted` | All ads in the ad break have finished playing. |
+| `adsError` (return ByteArkPlayerAdsErrorData) | An error occurs in the ad manager. |
 
 ### Example usage
 
 ```swift
-// Step 1: Create StreamSubscription instance
-StreamSubscription<dynamic>? _subscription;
+  // Step 1: Declare a StreamSubscription to listen for events from the native platform.
+  StreamSubscription<dynamic>? _subscription;
 
-    // Step 2: Start listening to events from the native side, BytearkPlayerEventTypes.eventName
-    _subscription = BytearkPlayerEventChannel.stream.listen((event) {
-      switch (event) {
-        case BytearkPlayerEventTypes.playerReady:
-          print('Received event: playerReady');
-          break;
-        default:
-          print('Received unknown event: $event');
-      }
-    }, onError: (error) {
-      print('Error: $error');
-    });
+  @override
+  void initState() {
+    super.initState();
+
+    // Step 2: Start listening for incoming events from the native platform.
+    _subscription = ByteArkPlayerEventChannel.stream.listen(
+      (event) {
+        try {
+          final Map<String, dynamic> decodedData = jsonDecode(event);
+          final eventObj = ByteArkPlayerNativeEvent.fromMap(decodedData);
+
+          switch (eventObj.type) {
+            // Step 3: Handle player-related events.
+            case ByteArkPlayerEventTypes.playerReady:
+              debugPrint('Event received: Player is ready.');
+              break;
+
+            // Step 4: Handle advertisement-related events.
+            case ByteArkPlayerEventTypes.adsStart:
+              final eventData = ByteArkPlayerAdsData.fromMap(eventObj.data);
+              debugPrint('Event received: Advertisement started - ${eventData.title}');
+              break;
+
+            // Step 5: Handle advertisement error events.
+            case ByteArkPlayerEventTypes.adsError:
+              final eventData = ByteArkPlayerAdsErrorData.fromMap(eventObj.data);
+              debugPrint('Event received: Advertisement error - Code: ${eventData.code}, Message: ${eventData.msg}');
+              break;
+
+            // Step 6: Handle unknown or unsupported events.
+            default:
+              debugPrint('Event received: Unknown event type - $event');
+          }
+        } catch (e) {
+          debugPrint('Error processing event: $e');
+        }
+      },
+      onError: (error) {
+        debugPrint('Error encountered in event stream: $error');
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    // Step 7: Cancel the event subscription to prevent memory leaks.
+    _subscription?.cancel();
+    super.dispose();
+  }
 ```
 
 
