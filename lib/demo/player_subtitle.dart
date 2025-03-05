@@ -39,9 +39,8 @@ class _PlayerSubtitle extends State<PlayerSubtitle> {
 
     // Step 2: Set ByteArkPlayerConfig.
     var playerConfig = ByteArkPlayerConfig(
-      licenseKey: ByteArkPlayerLicenseKey(
-          android: "CB4E8F-56012D-E75703-16EB94-EA6483-V3",
-          iOS: "86EC30-D3FE67-0E254F-18EC9C-EEEF5E-V3"),
+      licenseKey:
+          ByteArkPlayerLicenseKey(android: "ANDROID_KEY", iOS: "iOS_KEY"),
       playerItem: playerItem,
       subtitleSize: ByteArkPlayerSubtitleSize.medium, // Set subtitle size
       subtitleBackgroundEnabled: true, // Set subtitle background enable/disable
