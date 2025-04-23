@@ -4,7 +4,7 @@ PODS:
     - ByteArkPlayerSDKAdsPlugin (~> 0.1.4)
     - ByteArkPlayerSDKLighthousePlugin (~> 0.1.6)
     - Flutter
-  - ByteArkPlayerSDK (0.3.4)
+  - ByteArkPlayerSDK (0.3.5)
   - ByteArkPlayerSDKAdsPlugin (0.1.4):
     - ByteArkPlayerSDK (~> 0.3.3)
     - GoogleAds-IMA-iOS-SDK (~> 3.24.0)
@@ -37,7 +37,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   byteark_player_flutter: 230bfc85f0d05535750c4f83d4ee9e470dd52b99
-  ByteArkPlayerSDK: ad3a1c776ce7203e39be86cd7f25638d05a68ee9
+  ByteArkPlayerSDK: 021275a5b5b40f3aa41797af88e03bbd4b102e14
   ByteArkPlayerSDKAdsPlugin: f4fa62fb662599207841c5f088c91130dff4b329
   ByteArkPlayerSDKLighthousePlugin: c4bdd9a1a328ef0f26b88e8019c92b6ebbb82679
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7

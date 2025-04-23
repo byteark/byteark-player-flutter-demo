@@ -1,11 +1,8 @@
-import 'package:demo_byteark_player_flutter_integration/demo/player_events_listener.dart';
-import 'package:demo_byteark_player_flutter_integration/demo/player_playlist_screen.dart';
-import 'package:demo_byteark_player_flutter_integration/demo/player_secure_surface.dart';
-import 'package:demo_byteark_player_flutter_integration/demo/player_subtitle.dart';
+import 'package:demo_byteark_player_flutter_integration/demo/player_switch_media.dart';
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
-  runApp(DemoApp(demoScreen: PlayerPlaylistScreen()));
+  runApp(DemoApp(demoScreen: PlayerSwitchMedia()));
 }
 
 class DemoApp extends StatelessWidget {
