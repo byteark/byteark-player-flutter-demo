@@ -186,7 +186,7 @@ Here's a basic example of how to use **ByteArk Player widget** to play a video i
 
 ```javascript
 import 'package:byteark_player_flutter/data/byteark_player_license_key.dart';
-import 'package:byteark_player_flutter/domain/method_channel/byteark_player_controller.dart';
+import 'package:byteark_player_flutter/domain/byteark_player_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:byteark_player_flutter/data/byteark_player_config.dart';
 import 'package:byteark_player_flutter/data/byteark_player_item.dart';
@@ -204,35 +204,59 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late ByteArkPlayerController _controller;
+  // Declare required variables
+  late ByteArkPlayerItem _item;
+  late ByteArkPlayerConfig _config;
+  late ByteArkPlayerListener _listener;
+  late ByteArkPlayer _player;
 
   @override
   void initState() {
-    // Initialize the ByteArkPlayerController.
-    _controller = ByteArkPlayerController();
     super.initState();
+
+    // Step 1: Create a listener to handle player and ad events
+    _listener = ByteArkPlayerListener(
+      onPlayerReady: () {
+        debugPrint("Player is ready.");
+      },
+      onAdsStart: (data) {
+        debugPrint("Ad started. Data: ${data.toMap()}");
+      },
+    );
+
+    // Step 2: Define the video source using ByteArkPlayerItem
+    _item = ByteArkPlayerItem(
+      url:
+          "https://byteark-playertzxedwv.stream-playlist.byteark.com/streams/TZyZheqEJUwC/playlist.m3u8",
+    );
+
+    // Step 3: Configure the player using ByteArkPlayerConfig
+    _config = ByteArkPlayerConfig(
+      // Optional : Set up ads if needed.
+      adsSettings: ByteArkAdsSettings(
+        adTagUrl:
+            "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=",
+      ),
+      licenseKey: ByteArkPlayerLicenseKey(
+        android: "ANDROID_KEY", // Replace with your Android license key
+        iOS: "IOS_KEY", // Replace with your iOS license key
+      ),
+      playerItem: _item,
+    );
+
+    // Step 4: Initialize the ByteArkPlayer with the config and listener
+    _player = ByteArkPlayer(playerConfig: _config, listener: _listener);
   }
 
   @override
   void dispose() {
-    // Dispose of the ByteArkPlayerController to free resources.
-    _controller.dispose();
+    // Clean up player instance.
+    _player.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Step 1: Set ByteArkPlayerItem.
-    var playerItem = ByteArkPlayerItem(
-        url:
-            "https://byteark-playertzxedwv.stream-playlist.byteark.com/streams/TZyZheqEJUwC/playlist.m3u8");
-
-    // Step 2: Set ByteArkPlayerConfig.
-    var playerConfig = ByteArkPlayerConfig(
-        licenseKey: ByteArkPlayerLicenseKey(
-            android: "ANDROID_LICENSE_KEY", iOS: "IOS_LICENSE_KEY"),
-        playerItem: playerItem);
-
     return MaterialApp(
       title: 'ByteArk Player Demo',
       theme: ThemeData(
@@ -246,13 +270,16 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            // Step 3: Embed ByteArk Player widget.
+            // Step 5: Embed the player into your UI using AspectRatio
             AspectRatio(
               aspectRatio: 16 / 9,
-              child: ByteArkPlayer(
-                playerConfig: playerConfig,
-                height: 300,
-              ),
+              child: _player,
+            ),
+            const SizedBox(height: 16),
+            // Optional: Add controls to interact with the player
+            ElevatedButton(
+              onPressed: () => _player.pause(),
+              child: const Text("Pause"),
             ),
           ],
         ),
@@ -326,6 +353,7 @@ class ByteArkPlayerConfig {
   final bool? secureSurface; // Determines whether the player should use a secure surface for rendering protected content.
   final ByteArkPlayerSubtitleSize? subtitleSize; // Set subtitle size.
   final bool? subtitleBackgroundEnabled; // enable or disable subtitle background.
+  final int? subtitlePaddingBottomPercentage; /// Specifies the bottom padding for subtitles as a percentage.
 }
 ```
 
@@ -356,6 +384,7 @@ class ByteArkPlayerConfig {
 | `secureSurface` | bool? | Set this to `true`  to prevent screenshot capture or video recording of a video player. |
 | `subtitleSize` | ByteArkPlayerSubtitleSize? | Defines the subtitle size, default to medium. |
 | `subtitleBackgroundEnabled` | bool? | Specifies whether a background should be displayed behind subtitles. |
+| `subtitlePaddingBottomPercentage` | int? (1-100) | Specifies the bottom padding for subtitles as a percentage. |
 
 
 ---
@@ -399,29 +428,49 @@ The ByteArkPlayerController class provides an interface for controlling media pl
 ### Example usage
 
 ```swift
+late ByteArkPlayerItem _item;
+late ByteArkPlayerConfig _config;
+late ByteArkPlayer _player;
 
-  late ByteArkPlayerController _byteArkPlayerController;
-  
-  @override
-  void initState() {
-    super.initState();
-    // Step 1: Create ByteArkPlayerController instance
-    _byteArkPlayerController = ByteArkPlayerController();
-  }
+@override
+void initState() {
+  super.initState();
 
-    // Step 2: Using each method by calling byteArkPlayerController.methodName
-  ElevatedButton(
-       onPressed: () {
-           _byteArkPlayerController.play();
-       }
-  )
+  // Step 1: Define the video source using ByteArkPlayerItem
+  // Replace the URL with your actual video stream URL
+  _item = ByteArkPlayerItem(
+    url: "https://byteark-playertzxedwv.stream-playlist.byteark.com/streams/TZyZheqEJUwC/playlist.m3u8",
+  );
 
-  @override
-  void dispose() {
-    // Step 3: Only dispose the controller if you're sure you won't need it anymore
-    _byteArkPlayerController.dispose();
-    super.dispose();
-  }
+  // Step 2: Configure the player with license key and video item
+  // Replace license keys with your valid Android/iOS keys
+  _config = ByteArkPlayerConfig(
+    licenseKey: ByteArkPlayerLicenseKey(
+      android: "ANDROID_KEY", // Your Android license key here
+      iOS: "IOS_KEY",         // Your iOS license key here
+    ),
+    playerItem: _item,
+  );
+
+  // Step 3: Create the player using the config
+  _player = ByteArkPlayer(playerConfig: _config);
+}
+
+// Step 4: Add player controls (e.g., play button)
+ElevatedButton(
+  onPressed: () {
+    // Call play function to start the video
+    _player.play();
+  },
+  child: const Text("Play"),
+);
+
+@override
+void dispose() {
+  // Step 5: Always dispose of the player when done to release resources
+  _player.dispose();
+  super.dispose();
+}
 ```
 
 
@@ -433,91 +482,63 @@ This section sets up an event listener to handle various events emitted by the B
 
 | Event | Description |
 |----|----|
-| `playerReady` | Triggered when the player is ready for interaction. |
-| `playerLoadingMetadata` | Triggered when the player starts loading media metadata. |
-| `playbackFirstPlay` | Triggered when the media starts playing for the first time. |
-| `playbackPlay` | Triggered when the media playback resumes. |
-| `playbackPause` | Triggered when the media playback is paused. |
-| `playbackSeeking` | Triggered when seeking in the media begins. |
-| `playbackSeeked` | Triggered when the seek operation completes. |
-| `playbackEnded` | Triggered when the media playback reaches the end. |
-| `playbackTimeupdate` | Triggered at regular intervals to update the current playback time. |
-| `playbackBuffering` | Triggered when the media enters a buffering state. |
-| `playbackBuffered` | Triggered when buffering completes. |
-| `playbackError` | Triggered when a playback error occurs. |
-| `playerEnterFullscreen` | Triggered when the player enters fullscreen mode. |
-| `playerExitFullscreen` | Triggered when the player exits fullscreen mode. |
-| `playerEnterPictureInPictureMode` | Triggered when the player enters Picture-in-Picture mode. |
-| `playerExitPictureInPictureMode` | Triggered when the player exits Picture-in-Picture mode. |
-| `playbackResolutionChanged` | Triggered when the playback resolution changes. |
-| `adsRequest` | An ad request. |
-| `adsBreakStart` | An ad break starts (multiple ads may play in sequence). |
-| `adsBreakEnd` | An ad break ends. |
-| `adsStart` (return ByteArkPlayerAdsData) | An ad starts playing. |
-| `adsImpressed` (return ByteArkPlayerAdsData) | An impression is recorded for the ad. |
-| `adsCompleted` (return ByteArkPlayerAdsData) | An ad finishes playing. |
-| `adsFirstQuartile` (return ByteArkPlayerAdsData) | The first 25% of the ad has been played. |
-| `adsMidPoint` (return ByteArkPlayerAdsData) | 50% of the ad has been played. |
-| `adsThirdQuartile` (return ByteArkPlayerAdsData) | 75% of the ad has been played. |
-| `adsClicked` (return ByteArkPlayerAdsData) | The user clicks on the ad. |
-| `adsSkipped` (return ByteArkPlayerAdsData) | The user skips the ad. |
-| `allAdsCompleted` | All ads in the ad break have finished playing. |
-| `adsError` (return ByteArkPlayerAdsErrorData) | An error occurs in the ad manager. |
+| `onPlayerReady` | Triggered when the player is ready for interaction. |
+| `onPlayerLoadingMetadata` | Triggered when the player starts loading media metadata. |
+| `onPlaybackFirstPlay` | Triggered when the media starts playing for the first time. |
+| `onPlaybackPlay` | Triggered when the media playback resumes. |
+| `onPlaybackPause` | Triggered when the media playback is paused. |
+| `onPlaybackSeeking` | Triggered when seeking in the media begins. |
+| `onPlaybackSeeked` | Triggered when the seek operation completes. |
+| `onPlaybackEnded` | Triggered when the media playback reaches the end. |
+| `onPlaybackTimeupdate` | Triggered at regular intervals to update the current playback time. |
+| `onPlaybackBuffering` | Triggered when the media enters a buffering state. |
+| `onPlaybackBuffered` | Triggered when buffering completes. |
+| `onPlaybackError` | Triggered when a playback error occurs. |
+| `onPlayerEnterFullscreen` | Triggered when the player enters fullscreen mode. |
+| `onPlayerExitFullscreen` | Triggered when the player exits fullscreen mode. |
+| `onPlayerEnterPictureInPictureMode` | Triggered when the player enters Picture-in-Picture mode. |
+| `onPlayerExitPictureInPictureMode` | Triggered when the player exits Picture-in-Picture mode. |
+| `onPlaybackResolutionChanged` | Triggered when the playback resolution changes. |
+| `onAdsRequest` | An ad request. |
+| `onAdsBreakStart` | An ad break starts (multiple ads may play in sequence). |
+| `onAdsBreakEnd` | An ad break ends. |
+| `onAdsStart` (return ByteArkPlayerAdsData) | An ad starts playing. |
+| `onAdsImpressed` (return ByteArkPlayerAdsData) | An impression is recorded for the ad. |
+| `onAdsCompleted` (return ByteArkPlayerAdsData) | An ad finishes playing. |
+| `onAdsFirstQuartile` (return ByteArkPlayerAdsData) | The first 25% of the ad has been played. |
+| `onAdsMidPoint` (return ByteArkPlayerAdsData) | 50% of the ad has been played. |
+| `onAdsThirdQuartile` (return ByteArkPlayerAdsData) | 75% of the ad has been played. |
+| `onAdsClicked` (return ByteArkPlayerAdsData) | The user clicks on the ad. |
+| `onAdsSkipped` (return ByteArkPlayerAdsData) | The user skips the ad. |
+| `onAllAdsCompleted` | All ads in the ad break have finished playing. |
+| `onAdsError` (return ByteArkPlayerAdsErrorData) | An error occurs in the ad manager. |
 
 ### Example usage
 
 ```swift
-  // Step 1: Declare a StreamSubscription to listen for events from the native platform.
-  StreamSubscription<dynamic>? _subscription;
+  // Step 1: Declare a listerner.
+  late ByteArkPlayerListener _listener;
 
   @override
   void initState() {
     super.initState();
-
-    // Step 2: Start listening for incoming events from the native platform.
-    _subscription = ByteArkPlayerEventChannel.stream.listen(
-      (event) {
-        try {
-          final Map<String, dynamic> decodedData = jsonDecode(event);
-          final eventObj = ByteArkPlayerNativeEvent.fromMap(decodedData);
-
-          switch (eventObj.type) {
-            // Step 3: Handle player-related events.
-            case ByteArkPlayerEventTypes.playerReady:
-              debugPrint('Event received: Player is ready.');
-              break;
-
-            // Step 4: Handle advertisement-related events.
-            case ByteArkPlayerEventTypes.adsStart:
-              final eventData = ByteArkPlayerAdsData.fromMap(eventObj.data);
-              debugPrint('Event received: Advertisement started - ${eventData.title}');
-              break;
-
-            // Step 5: Handle advertisement error events.
-            case ByteArkPlayerEventTypes.adsError:
-              final eventData = ByteArkPlayerAdsErrorData.fromMap(eventObj.data);
-              debugPrint('Event received: Advertisement error - Code: ${eventData.code}, Message: ${eventData.msg}');
-              break;
-
-            // Step 6: Handle unknown or unsupported events.
-            default:
-              debugPrint('Event received: Unknown event type - $event');
-          }
-        } catch (e) {
-          debugPrint('Error processing event: $e');
-        }
+    
+    // Step 2: Create a listener to handle player and ad events
+    _listener = ByteArkPlayerListener(
+      onPlayerReady: () {
+        debugPrint("Player is ready.");
       },
-      onError: (error) {
-        debugPrint('Error encountered in event stream: $error');
+      onAdsStart: (data) {
+        debugPrint("Ad started. Data: ${data.toMap()}");
       },
     );
-  }
+    
+    // Step 3: add listener to ByteArkPlayer.
+    _player = ByteArkPlayer(
+      playerConfig: _config,
+      listener: _listener,
+    );
 
-  @override
-  void dispose() {
-    // Step 7: Cancel the event subscription to prevent memory leaks.
-    _subscription?.cancel();
-    super.dispose();
   }
 ```
 

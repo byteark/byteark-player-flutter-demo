@@ -2,7 +2,6 @@ import 'package:byteark_player_flutter/data/byteark_player_config.dart';
 import 'package:byteark_player_flutter/data/byteark_player_item.dart';
 import 'package:byteark_player_flutter/data/byteark_player_license_key.dart';
 import 'package:byteark_player_flutter/data/byteark_player_media_track.dart';
-import 'package:byteark_player_flutter/domain/method_channel/byteark_player_controller.dart';
 import 'package:byteark_player_flutter/presentation/byteark_player.dart';
 import 'package:flutter/material.dart';
 
@@ -98,16 +97,17 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  late ByteArkPlayerController _controller;
+  late ByteArkPlayer _player;
+
   @override
   void initState() {
-    _controller = ByteArkPlayerController();
+    _player = ByteArkPlayer(playerConfig: widget.playerConfig);
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _player.dispose();
     super.dispose();
   }
 
@@ -119,9 +119,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         ),
         body: Column(
           children: [
-            AspectRatio(
-                aspectRatio: 16 / 9,
-                child: ByteArkPlayer(playerConfig: widget.playerConfig)),
+            AspectRatio(aspectRatio: 16 / 9, child: _player),
             Expanded(
               child: DefaultTabController(
                 length: 2,
@@ -142,7 +140,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                               widget.playerConfig.playerItem?.title ?? "-",
                               widget.playerConfig.playerItem?.subtitle ?? "-"),
                           // Tab 2: Video Controls
-                          VideoControllerTab(widget.playerConfig, _controller),
+                          VideoControllerTab(widget.playerConfig, _player),
                         ],
                       ),
                     ),
@@ -179,11 +177,10 @@ class VideoInfoTab extends StatelessWidget {
 }
 
 class VideoControllerTab extends StatefulWidget {
-  final ByteArkPlayerConfig playerConfig;
-  final ByteArkPlayerController playerController;
+  final ByteArkPlayerConfig _config;
+  final ByteArkPlayer _player;
 
-  const VideoControllerTab(this.playerConfig, this.playerController,
-      {super.key});
+  const VideoControllerTab(this._config, this._player, {super.key});
 
   @override
   State<StatefulWidget> createState() => _VideoControllerTabState();
@@ -191,16 +188,17 @@ class VideoControllerTab extends StatefulWidget {
 
 class _VideoControllerTabState extends State<VideoControllerTab>
     with AutomaticKeepAliveClientMixin {
-  late ByteArkPlayerController _controller;
+  late ByteArkPlayer _player;
+
   @override
   void initState() {
-    _controller = widget.playerController;
+    _player = widget._player;
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _player.dispose();
     super.dispose();
   }
 
@@ -216,62 +214,62 @@ class _VideoControllerTabState extends State<VideoControllerTab>
         children: [
           ElevatedButton(
             onPressed: () {
-              _controller.play();
+              _player.play();
             },
             child: const Text("Play"),
           ),
           ElevatedButton(
             onPressed: () {
-              _controller.pause();
+              _player.pause();
             },
             child: const Text("Pause"),
           ),
           ElevatedButton(
             onPressed: () {
-              _controller.togglePlayback();
+              _player.togglePlayback();
             },
             child: const Text("Toggle Playback"),
           ),
           ElevatedButton(
             onPressed: () {
-              _controller.seekForward();
+              _player.seekForward();
             },
             child: const Text("Seek Forward"),
           ),
           ElevatedButton(
             onPressed: () {
-              _controller.seekBackward();
+              _player.seekBackward();
             },
             child: const Text("Seek Backward"),
           ),
           ElevatedButton(
             onPressed: () {
-              _controller.seekTo(50);
+              _player.seekTo(50);
             },
             child: const Text("Seek To"),
           ),
           ElevatedButton(
             onPressed: () {
-              _controller.switchMediaSource(widget.playerConfig);
+              _player.switchMediaSource(widget._config);
             },
             child: const Text("Switch Media Source"),
           ),
           ElevatedButton(
             onPressed: () {
-              _controller.toggleFullScreen();
+              _player.toggleFullScreen();
             },
             child: const Text("Toggle Full Screen"),
           ),
           ElevatedButton(
             onPressed: () async {
-              var currentAudio = await _controller.getCurrentAudio();
+              var currentAudio = await _player.getCurrentAudio();
               debugPrint(currentAudio?.toMap().toString());
             },
             child: const Text("Get Current Audio"),
           ),
           ElevatedButton(
             onPressed: () async {
-              var audio = await _controller.getAudios();
+              var audio = await _player.getAudios();
               for (var element in audio) {
                 debugPrint(element.toMap().toString());
               }
@@ -284,20 +282,20 @@ class _VideoControllerTabState extends State<VideoControllerTab>
               //     id: "SxTFInMH:Spanish", name: "Spanish", language: "es");
               var track = ByteArkPlayerMediaTrack(
                   id: "1", name: "Spanish", language: "spa");
-              _controller.setAudio(track);
+              _player.setAudio(track);
             },
             child: const Text("Set Audio"),
           ),
           ElevatedButton(
             onPressed: () async {
-              var subtitle = await _controller.getCurrentSubtitle();
+              var subtitle = await _player.getCurrentSubtitle();
               debugPrint(subtitle?.toMap().toString());
             },
             child: const Text("Get Current Subtitle"),
           ),
           ElevatedButton(
             onPressed: () async {
-              var subTitles = await _controller.getSubtitles();
+              var subTitles = await _player.getSubtitles();
               for (var element in subTitles) {
                 debugPrint(element.toMap().toString());
               }
@@ -310,20 +308,20 @@ class _VideoControllerTabState extends State<VideoControllerTab>
               //     id: "subtitle-1:Chinese", name: "Chinese", language: "zh");
               var track = ByteArkPlayerMediaTrack(
                   id: "0", name: "Japanese", language: "jpn");
-              _controller.setSubtitle(track);
+              _player.setSubtitle(track);
             },
             child: const Text("setSubtitle"),
           ),
           ElevatedButton(
             onPressed: () async {
-              var subtitle = await _controller.getCurrentResolution();
+              var subtitle = await _player.getCurrentResolution();
               debugPrint(subtitle?.toMap().toString());
             },
             child: const Text("Get Current Resolution"),
           ),
           ElevatedButton(
             onPressed: () async {
-              var subTitles = await _controller.getResolutions();
+              var subTitles = await _player.getResolutions();
               for (var element in subTitles) {
                 debugPrint(element.toMap().toString());
               }
@@ -334,21 +332,20 @@ class _VideoControllerTabState extends State<VideoControllerTab>
             onPressed: () {
               // var track = ByteArkPlayerMediaTrack(id: "3", name: "720p");
               var track = ByteArkPlayerMediaTrack(id: "3", name: "240p");
-              _controller.setResolution(track);
+              _player.setResolution(track);
             },
             child: const Text("Set Resolution"),
           ),
           ElevatedButton(
             onPressed: () async {
-              var playbackSpeed = await _controller.getCurrentPlaybackSpeed();
+              var playbackSpeed = await _player.getCurrentPlaybackSpeed();
               debugPrint(playbackSpeed.toString());
             },
             child: const Text("Get Current PlaybackSpeed"),
           ),
           ElevatedButton(
             onPressed: () async {
-              var playbackSpeeds =
-                  await _controller.getAvailablePlaybackSpeeds();
+              var playbackSpeeds = await _player.getAvailablePlaybackSpeeds();
               for (var element in playbackSpeeds) {
                 debugPrint(element.toString());
               }
@@ -357,19 +354,19 @@ class _VideoControllerTabState extends State<VideoControllerTab>
           ),
           ElevatedButton(
             onPressed: () {
-              _controller.setPlaybackSpeed(1.0);
+              _player.setPlaybackSpeed(1.0);
             },
             child: const Text("Set PlaybackSpeed"),
           ),
           ElevatedButton(
               onPressed: () async {
-                var time = await _controller.getCurrentTime();
+                var time = await _player.getCurrentTime();
                 debugPrint(time.toString());
               },
               child: const Text("Get CurrentTime")),
           ElevatedButton(
             onPressed: () async {
-              var duration = await _controller.getDuration();
+              var duration = await _player.getDuration();
               debugPrint(duration.toString());
             },
             child: const Text("Get Duration"),

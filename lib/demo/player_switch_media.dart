@@ -1,13 +1,7 @@
-import 'dart:async';
-import 'dart:convert';
-
-import 'package:byteark_player_flutter/data/byteark_player_event_types.dart';
 import 'package:byteark_player_flutter/data/byteark_player_license_key.dart';
 import 'package:byteark_player_flutter/data/byteark_player_media_track.dart';
-import 'package:byteark_player_flutter/data/byteark_player_native_event.dart';
 import 'package:byteark_player_flutter/data/byteark_player_subtitle_size.dart';
-import 'package:byteark_player_flutter/domain/event_channel/byteark_player_event_channel.dart';
-import 'package:byteark_player_flutter/domain/method_channel/byteark_player_controller.dart';
+import 'package:byteark_player_flutter/domain/byteark_player_listener.dart';
 import 'package:flutter/material.dart';
 import 'package:byteark_player_flutter/data/byteark_player_config.dart';
 import 'package:byteark_player_flutter/data/byteark_player_item.dart';
@@ -21,76 +15,71 @@ class PlayerSwitchMedia extends StatefulWidget {
 }
 
 class _PlayerSwitchMedia extends State<PlayerSwitchMedia> {
-  late ByteArkPlayerController _controller;
-  late StreamSubscription<dynamic>? _subscription;
+  late ByteArkPlayerItem _item1;
+  late ByteArkPlayerItem _item2;
+  late ByteArkPlayerConfig _config1;
+  late ByteArkPlayerConfig _config2;
+  late ByteArkPlayer _player;
+
   ByteArkPlayerMediaTrack? _currentSubtitle;
   ByteArkPlayerMediaTrack? _currentAudio;
-  final String _androidKey = "";
-  final String _iosKey = "";
+  final String _androidKey = "ANDROID_KEY";
+  final String _iosKey = "iOS_KEY";
 
   @override
   void initState() {
-    // Initialize the ByteArkPlayerController.
-    _controller = ByteArkPlayerController();
-    _subscription = ByteArkPlayerEventChannel.stream.listen((event) async {
-      final Map<String, dynamic> decodedData = jsonDecode(event);
-      final eventObj = ByteArkPlayerNativeEvent.fromMap(decodedData);
+    // Step 1: Set ByteArkPlayerItem.
+    _item1 = ByteArkPlayerItem(
+        url:
+            "https://byteark-slehxnn9ug5e.stream-playlist.byteark.com/streams/UcPGuuSYjy27/playlist.m3u8");
+    _item2 = ByteArkPlayerItem(
+        url:
+            "https://byteark-slehxnn9ug5e.stream-playlist.byteark.com/streams/UcPGuuSYjy27/playlist.m3u8");
 
-      // Player events
-      switch (eventObj.type) {
-        case ByteArkPlayerEventTypes.playerReady:
-          debugPrint('Received event: playerReady');
+    // Step 2: Set ByteArkPlayerConfig.
+    _config1 = ByteArkPlayerConfig(
+      licenseKey: ByteArkPlayerLicenseKey(android: _androidKey, iOS: _iosKey),
+      playerItem: _item1,
+      subtitleSize:
+          ByteArkPlayerSubtitleSize.tiny, // Use medium size instead of tiny
+      subtitleBackgroundEnabled: true, // Keep subtitle background enabled
+    );
+    _config2 = ByteArkPlayerConfig(
+      licenseKey: ByteArkPlayerLicenseKey(android: _androidKey, iOS: _iosKey),
+      playerItem: _item2,
+      subtitleSize:
+          ByteArkPlayerSubtitleSize.tiny, // Use medium size instead of tiny
+      subtitleBackgroundEnabled: true, // Keep subtitle background enabled
+    );
+
+    _player = ByteArkPlayer(
+      playerConfig: _config1,
+      listener: ByteArkPlayerListener(
+        onPlayerReady: () {
           if (_currentSubtitle != null) {
-            _controller.setSubtitle(_currentSubtitle!);
+            _player.setSubtitle(_currentSubtitle!);
           }
           if (_currentAudio != null) {
-            _controller.setAudio(_currentAudio!);
+            _player.setAudio(_currentAudio!);
           }
-          break;
-        case ByteArkPlayerEventTypes.playbackTimeupdate:
-          debugPrint('Received event: playbackTimeupdate');
-          _currentSubtitle = await _controller.getCurrentSubtitle();
-          _currentAudio = await _controller.getCurrentAudio();
-          debugPrint('Current subtitle ${_currentSubtitle?.toMap()}');
-          debugPrint('Current audio: ${_currentAudio?.toMap()}');
-          break;
-      }
-    });
+        },
+        onPlaybackTimeupdate: () async {
+          _currentSubtitle = await _player.getCurrentSubtitle();
+          _currentAudio = await _player.getCurrentAudio();
+        },
+      ),
+    );
     super.initState();
   }
 
   @override
   void dispose() {
-    // Dispose of the ByteArkPlayerController to free resources.
-    _controller.dispose();
-    // Dispose of the _subscription to free resources.
-    _subscription?.cancel();
+    // _player.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Step 1: Set ByteArkPlayerItem.
-    var playerItem = ByteArkPlayerItem(
-        url:
-            "https://byteark-slehxnn9ug5e.stream-playlist.byteark.com/streams/UcPGuuSYjy27/playlist.m3u8");
-
-    // Step 2: Set ByteArkPlayerConfig.
-    var playerConfig = ByteArkPlayerConfig(
-      licenseKey: ByteArkPlayerLicenseKey(android: _androidKey, iOS: _iosKey),
-      playerItem: playerItem,
-      subtitleSize:
-          ByteArkPlayerSubtitleSize.tiny, // Use medium size instead of tiny
-      subtitleBackgroundEnabled: true, // Keep subtitle background enabled
-    );
-    var playerConfig2 = ByteArkPlayerConfig(
-      licenseKey: ByteArkPlayerLicenseKey(android: _androidKey, iOS: _iosKey),
-      playerItem: playerItem,
-      subtitleSize:
-          ByteArkPlayerSubtitleSize.tiny, // Use medium size instead of tiny
-      subtitleBackgroundEnabled: true, // Keep subtitle background enabled
-    );
-
     return MaterialApp(
       title: 'ByteArk Player Subtitle Demo',
       theme: ThemeData(
@@ -108,12 +97,10 @@ class _PlayerSwitchMedia extends State<PlayerSwitchMedia> {
               // Step 3: Embed ByteArk Player widget.
               AspectRatio(
                 aspectRatio: 9 / 16,
-                child: ByteArkPlayer(
-                  playerConfig: playerConfig,
-                ),
+                child: _player,
               ),
               ElevatedButton(
-                onPressed: () => _controller.switchMediaSource(playerConfig2),
+                onPressed: () => _player.switchMediaSource(_config2),
                 child: const Text("Switch Media"),
               )
             ],
