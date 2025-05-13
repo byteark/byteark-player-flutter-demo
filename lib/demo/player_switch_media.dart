@@ -74,7 +74,7 @@ class _PlayerSwitchMedia extends State<PlayerSwitchMedia> {
 
   @override
   void dispose() {
-    // _player.dispose();
+    _player.dispose();
     super.dispose();
   }
 

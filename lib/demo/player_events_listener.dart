@@ -27,8 +27,6 @@ class _PlayerEventsListenerScreen extends State<PlayerEventsListenerScreen> {
   late ByteArkPlayerConfig _config;
   late ByteArkPlayer _player;
 
-  late StreamSubscription<dynamic>? _subscription;
-
   @override
   void initState() {
     super.initState();
@@ -116,10 +114,8 @@ class _PlayerEventsListenerScreen extends State<PlayerEventsListenerScreen> {
 
   @override
   void dispose() {
-    // Dispose of the ByteArkPlayerController to free resources.
+    // Dispose to free resources.
     _player.dispose();
-    // Dispose of the _subscription to free resources.
-    _subscription?.cancel();
     super.dispose();
   }
 
