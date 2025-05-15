@@ -21,10 +21,10 @@ packages:
     dependency: "direct main"
     description:
       name: byteark_player_flutter
-      sha256: "9337e97cb2b8dba5a3cad0a9a6ce4dcc28c35adcc360bcf4bb7add7cc5b9768c"
+      sha256: "611010881c2c063f4d2533829ce397e65d0d3cdb38618ef75af2ec265a018c07"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   characters:
     dependency: transitive
     description:
