@@ -34,7 +34,13 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  byteark_player_flutter: ^1.1.1
+  byteark_player_flutter: ^1.0.15
+  riverpod: ^2.6.1
+  flutter_riverpod: ^2.6.1
+  riverpod_lint: ^2.6.1
+  freezed: ^2.5.7
+  freezed_annotation: ^2.4.4
+  build_runner: ^2.4.15
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +63,10 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+      - assets/images/ic_byteark.png
+      - assets/images/bg_byteark.png
+      - assets/images/bg_byteark_opacity.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
